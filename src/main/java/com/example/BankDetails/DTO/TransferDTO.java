@@ -1,8 +1,15 @@
 package com.example.BankDetails.DTO;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
 public class TransferDTO {
 
-    public Long fromId;
-    public  Long toId;
-    public double amount;
+    private Long fromId;
+    private Long toId;
+    private BigDecimal amount;
 }

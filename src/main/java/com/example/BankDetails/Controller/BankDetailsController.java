@@ -1,36 +1,49 @@
 package com.example.BankDetails.Controller;
 
+import com.example.BankDetails.DTO.AmountDTO;
 import com.example.BankDetails.DTO.TransferDTO;
 import com.example.BankDetails.Model.BankDetails;
 import com.example.BankDetails.Service.BankService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @RestController
-@RequestMapping("bankDetails")
+@RequestMapping("/api/accounts")
 public class BankDetailsController {
 
     @Autowired
-    private BankService serivce;
+    private BankService service;
 
-    @PostMapping("createAmount")
-    public BankDetails createAmount(@RequestBody BankDetails ccc){
-        return serivce.createAmount(ccc);
+    @PostMapping("/createAccount")
+    public BankDetails createAccount(@RequestBody BankDetails account) {
+        return service.createAmount(account);
+    }
+    @PostMapping("/{id}/deposit")
+    public BankDetails deposit(@PathVariable Long id,
+                               @RequestBody AmountDTO dto) {
+        return service.deposit(id, dto.getAmount());
+    }
+    @PostMapping("/{id}/withdraw")
+    public BankDetails withdraw(@PathVariable Long id,
+                                @RequestBody AmountDTO dto) {
+        return service.withdraw(id, dto.getAmount());
+    }
+    @PostMapping("/transfer")
+    public String transfer(@RequestBody TransferDTO dto) {
+        return service.transfer(
+                dto.getFromId(),
+                dto.getToId(),
+                dto.getAmount()
+        );
     }
 
-    @PostMapping("deposit/{id}")
+    @GetMapping("getAll")
 
-    public BankDetails deposit(@PathVariable Long id, @RequestParam double amount){
-        return serivce.deposit(id,amount);
-    }
-
-    @PostMapping("withdraw")
-    public BankDetails withdraw(@PathVariable Long id,@RequestParam double amount){
-        return serivce.withdraw(id,amount);
-    }
-
-    @PostMapping("Transfer")
-    public String transfer(@RequestBody TransferDTO dto){
-        return serivce.transfer(dto.fromId,dto.toId,dto.amount);
+    public List<BankDetails> getAll(){
+        return service.getAll();
     }
 }
